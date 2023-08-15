@@ -3,6 +3,7 @@ Bird = Class{}
 
 -- creating gravity
 local GRAVITY = 17
+local ANTI_GRAVITY = -5
 
 -- initializing the bird class
 function Bird:init()
@@ -22,6 +23,11 @@ end
 function Bird:update(dt)
 
     self.dy = self.dy + GRAVITY * dt
+
+    if love.keyboard.wasPressed('space') then
+        self.dy = ANTI_GRAVITY
+    end
+
     self.y = self.y + self.dy
 
 end

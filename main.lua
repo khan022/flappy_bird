@@ -41,6 +41,8 @@ function love.load()
         resizable = true
     })
 
+    love.keyboard.keysPressed = {}
+
 end
 
 
@@ -51,9 +53,23 @@ end
 
 -- function for getting the user input
 function love.keypressed(key)
+
+    love.keyboard.keysPressed[key] = true
+
     if key == 'escape' then
         love.event.quit()
     end
+
+end
+
+function love.keyboard.wasPressed(key)
+
+    if love.keyboard.keysPressed[key] then
+        return true
+    else
+        return false
+    end
+
 end
 
 
@@ -66,6 +82,7 @@ function love.update(dt)
 
     -- applying gravity on th bird
     bird:update(dt)
+    love.keyboard.keysPressed = {}
 
 end
 
