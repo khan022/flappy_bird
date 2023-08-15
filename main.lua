@@ -2,8 +2,9 @@
 push = require 'push'
 Class = require 'class'
 
--- import the Bird class
+-- import the Bird class and Pipe class
 require 'Bird'
+require 'Pipe'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -24,8 +25,10 @@ local GROUND_SCROLL_SPEED = 70
 
 local BACKGROUND_LOOPING_POINT = 413
 
--- creating local variable called bird
+-- creating local variable called bird and pipe
 local bird = Bird()
+local pipes = {}
+local spawnTimer = 0
 
 function love.load()
 
@@ -34,6 +37,8 @@ function love.load()
 
     -- applying the name
     love.window.setTitle('Flat Bird!')
+    -- creating seed for random number generation
+    math.randomseed(os.time())
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
@@ -80,8 +85,25 @@ function love.update(dt)
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
-    -- applying gravity on th bird
+    -- spawning pipes as elements of table
+    spawnTimer = spawnTimer + dt
+
+    if spawnTimer > 3 then
+        table.insert(pipes, Pipe())
+        spawnTimer = 0
+    end
+
+    -- applying gravity on the bird
     bird:update(dt)
+
+    for k, pipe in pairs(pipes) do
+        pipe:update(dt)
+
+        if pipe.x < -pipe.width then
+            table.remove(pipes, k)
+        end
+    end
+
     love.keyboard.keysPressed = {}
 
 end
@@ -94,8 +116,12 @@ function love.draw()
     -- starting the game
     push:start()
 
-    -- drawing the background and ground
-    love.graphics.draw(background, -backgroundScroll, 0)
+    -- drawing the background, pip, ground, and the bird
+     love.graphics.draw(background, -backgroundScroll, 0)
+
+    for k, pipe in pairs(pipes) do
+        pipe:render()
+    end
 
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
 
