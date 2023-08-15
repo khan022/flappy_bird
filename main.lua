@@ -19,8 +19,8 @@ local backgroundScroll = 0 -- keeping the scrolling values
 local ground = love.graphics.newImage('images/ground.png')
 local groundScroll = 0
 
-local BACKGROUND_SCROLL_SPEED = 30
-local GROUND_SCROLL_SPEED = 60
+local BACKGROUND_SCROLL_SPEED = 25
+local GROUND_SCROLL_SPEED = 70
 
 local BACKGROUND_LOOPING_POINT = 413
 
@@ -63,6 +63,9 @@ function love.update(dt)
     -- background and ground scrolling added
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+
+    -- applying gravity on th bird
+    bird:update(dt)
 
 end
 

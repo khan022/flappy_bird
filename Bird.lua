@@ -1,7 +1,8 @@
 -- Creating the bird class
-
 Bird = Class{}
 
+-- creating gravity
+local GRAVITY = 17
 
 -- initializing the bird class
 function Bird:init()
@@ -12,6 +13,16 @@ function Bird:init()
 
     self.x = VIRTUAL_WIDTH / 2 - (self.width / 2)
     self.y = VIRTUAL_HEIGHT / 2 - (self.height / 2)
+
+    self.dy = 0
+
+end
+
+-- update function to implement gravity
+function Bird:update(dt)
+
+    self.dy = self.dy + GRAVITY * dt
+    self.y = self.y + self.dy
 
 end
 
