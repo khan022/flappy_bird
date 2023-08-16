@@ -31,6 +31,7 @@ local bird = Bird()
 local pipePairs = {}
 local spawnTimer = 0
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
+local scrolling = true -- local variable for scrolling
 
 function love.load()
 
@@ -83,38 +84,49 @@ end
 -- function for updating the background image
 function love.update(dt)
     
-    -- background and ground scrolling added
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    -- to check if collision is happening
+    if scrolling then
 
-    -- spawning pipes as elements of table
-    spawnTimer = spawnTimer + dt
+        -- background and ground scrolling added
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
-    if spawnTimer > 2.5 then
+        -- spawning pipes as elements of table
+        spawnTimer = spawnTimer + dt
 
-        local y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
-        lastY = y
+        if spawnTimer > 2.5 then
+
+            local y = math.max(-PIPE_HEIGHT + 10, 
+                math.min(lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+            lastY = y
         
-        table.insert(pipePairs, PipePair(y))
-        spawnTimer = 0
+            table.insert(pipePairs, PipePair(y))
+            spawnTimer = 0
 
-    end
+        end
 
-    -- applying gravity on the bird
-    bird:update(dt)
+        -- applying gravity on the bird
+        bird:update(dt)
 
-    for k, pair in pairs(pipePairs) do
-        pair:update(dt)
+        for k, pair in pairs(pipePairs) do
+            pair:update(dt)
+            
+            -- check if the bird is colliding with the pipes
+            for l, pipe in pairs(pair.pipes) do
+                if bird:collides(pipe) then
+                    -- pause the game to show collision
+                    scrolling = false
+                end
+            end
+            -- if pipe.x < -pipe.width then
+            --     table.remove(pipes, k)
+            -- end
+        end
 
-        -- if pipe.x < -pipe.width then
-        --     table.remove(pipes, k)
-        -- end
-    end
-
-    for k, pair in pairs(pipePairs) do
-        if pair.remove then
-            table.remove(pipePairs, k)
+        for k, pair in pairs(pipePairs) do
+            if pair.remove then
+                table.remove(pipePairs, k)
+            end
         end
     end
 

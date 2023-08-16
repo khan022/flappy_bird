@@ -2,7 +2,7 @@
 PipePair = Class{}
 
 -- using local variables 
-local GAP_HEIGHT = math.random(50, 120)
+local GAP_HEIGHT = math.random(40, 120)
 
 -- initialize the class
 function PipePair:init(y)
