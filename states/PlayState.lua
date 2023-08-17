@@ -16,6 +16,8 @@ function PlayState:init()
     self.pipePairs = {}
     self.timer = 0
 
+    self.score = 0 -- keeping track of our score
+
     -- using the last recorded y to calculate the next gap
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20
 
@@ -43,8 +45,18 @@ function PlayState:update(dt)
 
     -- moving the pipes and generating them in random location
     for k, pair in pairs(self.pipePairs) do
+
+        -- apply scoring to the pipe pairs and bird
+        if not pair.scored then
+            if pair.x + PIPE_WIDTH < self.bird.x then
+                self.score = self.score + 1
+                pair.scored = true
+            end
+        end
+
         -- update position of pair
         pair:update(dt)
+
     end
 
     -- removing the pipes
@@ -61,14 +73,18 @@ function PlayState:update(dt)
     for k, pair in pairs(self.pipePairs) do
         for l, pipe in pairs(pair.pipes) do
             if self.bird:collides(pipe) then
-                gStateMachine:change('title')
+                gStateMachine:change('score', {
+                    score = self.score
+                })
             end
         end
     end
 
     -- check collisions with the ground
     if self.bird.y > VIRTUAL_HEIGHT - 15 then
-        gStateMachine:change('title')
+        gStateMachine:change('score', {
+            score = self.score
+        })
     end
 
 end
@@ -81,5 +97,8 @@ function PlayState:render()
         pair:render()
     end
 
+    love.graphics.setFont(flappyFont)
+    love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
+    
     self.bird:render()
 end

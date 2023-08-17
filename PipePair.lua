@@ -21,6 +21,9 @@ function PipePair:init(y)
     -- remove the pipes from memory
     self.remove = false
 
+    -- implement the score from the collisions
+    self.score = false
+
 end
 
 -- updating the pipe pairs
