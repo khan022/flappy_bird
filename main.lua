@@ -92,6 +92,9 @@ function love.load()
     -- initializing the input table
     love.keyboard.keysPressed = {}
 
+    -- initialize mouse input table
+    love.mouse.buttonsPressed = {}
+
 end
 
 
@@ -111,6 +114,16 @@ function love.keypressed(key)
 
 end
 
+
+--[[
+    LÖVE2D callback fired each time a mouse button is pressed; gives us the
+    X and Y of the mouse, as well as the button in question.
+]]
+function love.mousepressed(x, y, button)
+    love.mouse.buttonsPressed[button] = true
+end
+
+
 function love.keyboard.wasPressed(key)
 
     if love.keyboard.keysPressed[key] then
@@ -119,6 +132,13 @@ function love.keyboard.wasPressed(key)
         return false
     end
 
+end
+
+--[[
+    Equivalent to our keyboard function from before, but for the mouse buttons.
+]]
+function love.mouse.wasPressed(button)
+    return love.mouse.buttonsPressed[button]
 end
 
 
@@ -176,6 +196,7 @@ function love.update(dt)
 
     -- reset the input table
     love.keyboard.keysPressed = {}
+    love.mouse.buttonsPressed = {}
 
 end
 
