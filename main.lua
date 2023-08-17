@@ -56,6 +56,21 @@ function love.load()
     hugeFont = love.graphics.newFont('fonts/flappy.ttf', 56)
     love.graphics.setFont(flappyFont)
 
+    -- initialize our table of sounds
+    sounds = {
+        ['jump'] = love.audio.newSource('sounds/jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('sounds/explosion.wav', 'static'),
+        ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
+
+        -- https://freesound.org/people/xsgianni/sounds/388079/
+        ['music'] = love.audio.newSource('sounds/marios_way.mp3', 'static')
+    }
+
+    -- kick off music
+    sounds['music']:setLooping(true)
+    sounds['music']:play()
+
     -- creating seed for random number generation
     math.randomseed(os.time())
 
